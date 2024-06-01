@@ -3,7 +3,7 @@ import createDebug from 'debug';
 
 import { author, name, version } from '../../package.json';
 import { formatDate } from '../core/utils';
-import { getTasksNotCompleted } from '../service';
+import { getTasksForTomorrow, getTasksNotCompleted } from '../service';
 
 const debug = createDebug('bot:about_command');
 
@@ -47,4 +47,38 @@ const showTodayTasks = async (ctx: Context): Promise<void> => {
     }
 }
 
-export { showTodayTasks };
+const showTomorrowTasks = async (ctx: Context): Promise<void> => {
+    try {
+        const data = await getTasksForTomorrow()
+        if (!data) {
+            ctx.reply("No hay tareas pendientes")
+            return
+        }
+        const tasks = data.results.map((task) => {
+            return {
+                task: task.properties,
+                url: task.url
+            }
+        })
+
+        const tasksToShow = tasks.map((task, index) => {
+            const limitDate = formatDate(task.task['Fecha Limite'].date?.start)
+
+            return `TAREA: ${index + 1}
+      NOMBRE: ${task.task['Nombre'].title[0].plain_text}
+      FECHA LIMITE: ${limitDate}
+      TIPO: ${task.task['Tipo'].select?.name}
+      PRIORIDAD: ${task.task['Prioridad'].select?.name.toLocaleUpperCase()}
+      URL: ${task.url}`
+        })
+
+        const message = `Total tareas pendientes: ${tasks.length}\n
+    ${tasksToShow.join('\n\n')}`
+
+        ctx.reply(message)
+    } catch (error) {
+        ctx.reply("Ocurrió un error al cargar las tareas pendientes")
+    }
+}
+
+export { showTodayTasks, showTomorrowTasks };

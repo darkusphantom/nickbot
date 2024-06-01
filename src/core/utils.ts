@@ -18,5 +18,17 @@ export const formatDate = (date: any): string => {
 
     const formattedDate = `${hour}:${minutes}  -  ${day}-${month}-${year}`;
     return formattedDate
+}
 
+/**
+ * Returns the date of tomorrow.
+ *
+ * @return {Date} The date of tomorrow.
+ */
+export const getTomorrowDate = () => {
+    const today = new Date();
+    console.log("TODAY: ", today)
+    const tomorrow = today.setDate(today.getDate() + 1);
+    console.log("TOMORROW: ", tomorrow)
+    return new Date(tomorrow);
 }
