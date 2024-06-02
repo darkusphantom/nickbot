@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
 
-import { about, showTodayTasks } from './commands';
+import { about, howToUseBot, showTodayTasks } from './commands';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { development, production } from './core';
 import { welcomeMessage } from './commands/start';
@@ -11,6 +11,7 @@ const ENVIRONMENT = process.env.NODE_ENV || '';
 const bot = new Telegraf(BOT_TOKEN);
 
 bot.start(welcomeMessage)
+bot.help(howToUseBot)
 bot.command('about', about());
 bot.command('task_today', showTodayTasks)
 
