@@ -1,9 +1,8 @@
 import { Context } from 'telegraf';
 import createDebug from 'debug';
 
-import { author, name, version } from '../../package.json';
 import { formatDate } from '../core/utils';
-import { getTasksForTomorrow, getTasksNotCompleted } from '../service';
+import { getTasksForTomorrow, getTasksNotCompleted, getTasksSomeday, getTasksToBeDone } from '../service';
 
 const debug = createDebug('bot:about_command');
 
@@ -26,20 +25,14 @@ const showTodayTasks = async (ctx: Context): Promise<void> => {
                 url: task.url
             }
         })
-
         const tasksToShow = tasks.map((task, index) => {
             const limitDate = formatDate(task.task['Fecha Limite'].date?.start)
-
-            return `TAREA: ${index + 1}
-      NOMBRE: ${task.task['Nombre'].title[0].plain_text}
-      FECHA LIMITE: ${limitDate}
-      TIPO: ${task.task['Tipo'].select?.name}
-      PRIORIDAD: ${task.task['Prioridad'].select?.name.toLocaleUpperCase()}
-      URL: ${task.url}`
+            const taskName = task.task['Nombre'].title[0].plain_text
+            
+            return `${index + 1}. ${taskName} (${task.task['Prioridad'].select?.name.toLocaleUpperCase()}) | ${limitDate}`
         })
 
-        const message = `Total tareas pendientes: ${tasks.length}\n
-    ${tasksToShow.join('\n\n')}`
+        const message = `Total tareas pendientes: ${tasks.length}\n\n${tasksToShow.join('\n\n')}`
 
         ctx.reply(message)
     } catch (error) {
@@ -54,6 +47,37 @@ const showTomorrowTasks = async (ctx: Context): Promise<void> => {
             ctx.reply("No hay tareas pendientes")
             return
         }
+        const tasks = data.results.map((task) => ({
+            task: task.properties,
+            url: task.url
+        }))
+
+        const tasksToShow = tasks.map((task, index) => {
+            const limitDate = formatDate(task.task['Fecha Limite'].date?.start)
+            const icon = task.task['Tipo'].select?.name.at(0) === '✅' ? '✅' : '📩'
+            const taskName = task.task['Nombre'].title[0].plain_text
+            const prioridad = task.task['Prioridad'].select?.name.toLocaleUpperCase()
+
+            return `${index + 1}.${icon} ${taskName} (${prioridad})
+            FECHA LIMITE: ${limitDate}`
+        })
+
+        const message = `Total tareas para mañana: ${tasks.length}\n
+    ${tasksToShow.join('\n\n')}`
+
+        ctx.reply(message)
+    } catch (error) {
+        ctx.reply("Ocurrió un error al cargar las tareas de mañana")
+    }
+}
+
+const showTasksToBeDone = async (ctx: Context): Promise<void> => {
+    try {
+        const data = await getTasksToBeDone()
+        if (!data) {
+            ctx.reply("No hay tareas pendientes")
+            return
+        }
         const tasks = data.results.map((task) => {
             return {
                 task: task.properties,
@@ -63,22 +87,55 @@ const showTomorrowTasks = async (ctx: Context): Promise<void> => {
 
         const tasksToShow = tasks.map((task, index) => {
             const limitDate = formatDate(task.task['Fecha Limite'].date?.start)
+            const taskName = task.task['Nombre'].title[0].plain_text
+            const prioridad = task.task['Prioridad'].select?.name.toLocaleUpperCase()
 
-            return `TAREA: ${index + 1}
-      NOMBRE: ${task.task['Nombre'].title[0].plain_text}
-      FECHA LIMITE: ${limitDate}
-      TIPO: ${task.task['Tipo'].select?.name}
-      PRIORIDAD: ${task.task['Prioridad'].select?.name.toLocaleUpperCase()}
-      URL: ${task.url}`
-        })
+            return `${index + 1}.🗒️ ${taskName} (${prioridad}) | ${limitDate}
+`})
 
-        const message = `Total tareas pendientes: ${tasks.length}\n
+        const message = `Total tareas por hacer: ${tasks.length}\n
     ${tasksToShow.join('\n\n')}`
 
         ctx.reply(message)
     } catch (error) {
-        ctx.reply("Ocurrió un error al cargar las tareas pendientes")
+        ctx.reply("Ocurrió un error al cargar las tareas por hacer")
     }
 }
 
-export { showTodayTasks, showTomorrowTasks };
+const showTasksSomeday = async (ctx: Context): Promise<void> => {
+    try {
+        const data = await getTasksSomeday()
+        if (!data) {
+            ctx.reply("No hay tareas pendientes")
+            return
+        }
+        const tasks = data.results.map((task) => {
+            return {
+                task: task.properties,
+                url: task.url
+            }
+        })
+
+        const tasksToShow = tasks.map((task, index) => {
+            const limitDate = formatDate(task.task['Fecha Limite'].date?.start)
+            const taskName = task.task['Nombre'].title[0].plain_text
+            const prioridad = task.task['Prioridad'].select?.name.toLocaleUpperCase()
+
+            return `${index + 1}.✨ ${taskName} (${prioridad}) | ${limitDate}`
+        })
+
+        const message = `Total tareas para hacer algún día: ${tasks.length}\n
+    ${tasksToShow.join('\n\n')}`
+
+        ctx.reply(message)
+    } catch (error) {
+        ctx.reply("Ocurrió un error al cargar las tareas para hacer algún día")
+    }
+}
+
+export {
+    showTodayTasks,
+    showTomorrowTasks,
+    showTasksToBeDone,
+    showTasksSomeday
+};
