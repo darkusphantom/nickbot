@@ -3,6 +3,7 @@ import { Telegraf } from 'telegraf';
 import { about, showTasksSomeday, showTasksToBeDone, showTodayTasks, showTomorrowTasks } from './commands';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { development, production } from './core';
+import { showHabitsOnThisWeek } from './commands/habits';
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const ENVIRONMENT = process.env.NODE_ENV || '';
@@ -14,6 +15,8 @@ bot.command('task_today', showTodayTasks)
 bot.command('task_tomorrow', showTomorrowTasks)
 bot.command('task_todo', showTasksToBeDone)
 bot.command('task_someday', showTasksSomeday)
+
+bot.command('habits', showHabitsOnThisWeek)
 
 bot.on('message', () => {
   console.log("App is running");
