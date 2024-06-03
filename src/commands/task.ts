@@ -19,16 +19,14 @@ const showTodayTasks = async (ctx: Context): Promise<void> => {
             ctx.reply("No hay tareas pendientes")
             return
         }
-        const tasks = data.results.map((task) => {
-            return {
-                task: task.properties,
-                url: task.url
-            }
-        })
+        const tasks = data.results.map((task) => ({
+            task: task.properties,
+            url: task.url
+        }));
         const tasksToShow = tasks.map((task, index) => {
             const limitDate = formatDate(task.task['Fecha Limite'].date?.start)
             const taskName = task.task['Nombre'].title[0].plain_text
-            
+
             return `${index + 1}. ${taskName} (${task.task['Prioridad'].select?.name.toLocaleUpperCase()}) | ${limitDate}`
         })
 
@@ -40,6 +38,12 @@ const showTodayTasks = async (ctx: Context): Promise<void> => {
     }
 }
 
+/**
+ * Retrieves and displays the tasks for tomorrow using the provided context.
+ *
+ * @param {Context} ctx - The context object used to send replies.
+ * @return {Promise<void>} A promise that resolves when the tasks are displayed.
+ */
 const showTomorrowTasks = async (ctx: Context): Promise<void> => {
     try {
         const data = await getTasksForTomorrow()
@@ -71,6 +75,12 @@ const showTomorrowTasks = async (ctx: Context): Promise<void> => {
     }
 }
 
+/**
+ * Asynchronously retrieves tasks that need to be done and sends a message with the task details to the provided context.
+ *
+ * @param {Context} ctx - The context object used to send the message.
+ * @return {Promise<void>} A Promise that resolves when the message is sent.
+ */
 const showTasksToBeDone = async (ctx: Context): Promise<void> => {
     try {
         const data = await getTasksToBeDone()
@@ -102,6 +112,12 @@ const showTasksToBeDone = async (ctx: Context): Promise<void> => {
     }
 }
 
+/**
+ * Retrieves tasks that need to be done someday and sends a message with the task details to the provided context.
+ *
+ * @param {Context} ctx - The context object used to send the message.
+ * @return {Promise<void>} A Promise that resolves when the message is sent.
+ */
 const showTasksSomeday = async (ctx: Context): Promise<void> => {
     try {
         const data = await getTasksSomeday()
