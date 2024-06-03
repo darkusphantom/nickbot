@@ -31,28 +31,30 @@ export interface NotionDatabase {
         href: string | null;
     }>;
     properties: {
-        [key: string]: {
-            id: string;
-            type: string;
-            checkbox?: boolean;
-            select?: {
-                name: string;
-                color: string;
-            };
-            multi_select?: Array<{
-                name: string;
-                color: string;
-            }>;
-            date?: {
-                start: string;
-                end: string | null;
-            };
-            title: Title[]
-            // Agrega aquí otros tipos de propiedades según sea necesario
-        };
+        [key: string]: Properties
     };
     url: string;
 }
+
+export interface Properties {
+    id: string;
+    type: string;
+    checkbox?: boolean;
+    select?: {
+        name: string;
+        color: string;
+    };
+    multi_select?: Array<{
+        name: string;
+        color: string;
+    }>;
+    date?: {
+        start: string;
+        end: string | null;
+    };
+    title: Title[]
+    // Agrega aquí otros tipos de propiedades según sea necesario
+};
 
 interface Title {
     type: string;

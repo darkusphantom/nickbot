@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
 
-import { about, showTodayTasks } from './commands';
+import { about, showTasksSomeday, showTasksToBeDone, showTodayTasks, showTomorrowTasks } from './commands';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { development, production } from './core';
 
@@ -11,6 +11,9 @@ const bot = new Telegraf(BOT_TOKEN);
 
 bot.command('about', about());
 bot.command('task_today', showTodayTasks)
+bot.command('task_tomorrow', showTomorrowTasks)
+bot.command('task_todo', showTasksToBeDone)
+bot.command('task_someday', showTasksSomeday)
 
 bot.on('message', () => {
   console.log("App is running");

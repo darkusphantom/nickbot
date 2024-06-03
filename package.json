@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "description": "Nick bot todo list",
   "main": "src/index.ts",
-  "author": "Mark Pavlov (https://github.com/sollidy)",
-  "homepage": "https://github.com/sollidy/telegram-bot-vercel-boilerplate",
+  "author": "DarkusPhantom (https://github.com/darkusphantom)",
+  "homepage": "https://github.com/darkusphantom/nickbot",
   "dependencies": {
     "@notionhq/client": "^2.2.15",
     "@vercel/node": "^3.0.13",
