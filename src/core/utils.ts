@@ -41,3 +41,38 @@ export const getTodayDate = () => {
 
     return `${year}-${month}-${day}`
 }
+
+export const formatEmotions = (emotion: string | undefined): string => {
+    if (emotion === "Feliz") {
+        return "😁"
+    }
+
+    if (emotion === "Alegre") {
+        return "😊"
+    }
+
+    if (emotion === "Neutral") {
+        return "😐"
+    }
+
+    if (emotion === "Triste") {
+        return "😢"
+    }
+
+
+    if (emotion === "Enojado") {
+        return "😡"
+    }
+
+    return '❓'
+}
+
+export const formatHabitsByMonth = (habits: any[], index: number) => {
+    const date = new Date(habits[index].habit['Nombre'].title[0].plain_text)
+    const currentMonth = date.toLocaleString('default', { month: 'long' })
+    
+    if (index === 0 || currentMonth !== new Date(habits[index - 1].habit['Nombre'].title[0].plain_text).toLocaleString('default', { month: 'long' })) {
+        return `\n${currentMonth}\n${habits[index].habit['Nombre'].title[0].plain_text}: `
+    }
+    return ''
+}

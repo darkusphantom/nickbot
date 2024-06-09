@@ -1,13 +1,7 @@
 import { APIErrorCode, ClientErrorCode, isNotionClientError } from "@notionhq/client"
 import { NotionDatabaseAPI } from "../interfaces/database.interface"
 import { getTodayDate, getTomorrowDate } from "../core/utils"
-
-const { Client } = require("@notionhq/client")
-
-// Initializing a client
-const notion = new Client({
-    auth: process.env.NOTION_TOKEN,
-})
+import { notion } from "../core/configAPI"
 
 /**
  * Retrieves tasks that are not completed from the Notion database.
