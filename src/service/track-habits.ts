@@ -4,16 +4,16 @@ import { NotionDatabaseAPI } from "../interfaces/database.interface"
 
 export const getTrackHabitsThisWeek = async (): Promise<NotionDatabaseAPI | null> => {
     try {
-        const filter = {
-            and: [
-                {
-                    property: "Nombre",
-                    date: {
-                        this_week: {}
-                    }
-                },
-            ],
-        }
+        // const filter = {
+        //     and: [
+        //         {
+        //             property: "Nombre",
+        //             date: {
+        //                 this_week: {}
+        //             }
+        //         },
+        //     ],
+        // }
 
 
         const sorts = [
@@ -27,7 +27,7 @@ export const getTrackHabitsThisWeek = async (): Promise<NotionDatabaseAPI | null
         const data = await notion.databases.query({
             database_id: databaseId,
             // filter,
-            // sorts
+            sorts
         })
         return data;
     } catch (error: unknown) {
