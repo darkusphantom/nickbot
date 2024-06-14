@@ -1,7 +1,7 @@
 import { APIErrorCode, ClientErrorCode, isNotionClientError } from "@notionhq/client"
 import { NotionDatabaseAPI } from "../interfaces/database.interface"
 import { getTodayDate, getTomorrowDate } from "../core/utils"
-import { notion } from "../core/configAPI"
+import { getDBIDTasks, notion } from "../core/configAPI"
 
 /**
  * Retrieves tasks that are not completed from the Notion database.
@@ -68,7 +68,8 @@ export const getTasksNotCompleted = async (): Promise<NotionDatabaseAPI | null> 
             }
         ]
 
-        const databaseId = "b11b2142740644918c1945bfc0a91bea"
+        const databaseId = getDBIDTasks()
+        if (!databaseId) return null
         const data = await notion.databases.query({
             database_id: databaseId,
             filter,
@@ -159,7 +160,7 @@ export const getTasksForTomorrow = async (): Promise<NotionDatabaseAPI | null> =
             }
         ]
 
-        const databaseId = "b11b2142740644918c1945bfc0a91bea"
+        const databaseId = getDBIDTasks()
         const data = await notion.databases.query({
             database_id: databaseId,
             filter,
@@ -217,7 +218,7 @@ export const getTasksToBeDone = async (): Promise<NotionDatabaseAPI | null> => {
             }
         ]
 
-        const databaseId = "b11b2142740644918c1945bfc0a91bea"
+        const databaseId = getDBIDTasks()
         const data = await notion.databases.query({
             database_id: databaseId,
             filter,
@@ -275,7 +276,7 @@ export const getTasksSomeday = async (): Promise<NotionDatabaseAPI | null> => {
             }
         ]
 
-        const databaseId = "b11b2142740644918c1945bfc0a91bea"
+        const databaseId = getDBIDTasks()
         const data = await notion.databases.query({
             database_id: databaseId,
             filter,
