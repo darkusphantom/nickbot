@@ -1,9 +1,9 @@
 import { Telegraf } from 'telegraf';
-
-import { about, showTasksSomeday, showTasksToBeDone, showTodayTasks, showTomorrowTasks } from './commands';
+import { about,howToUseBot, showTasksSomeday, showTasksToBeDone, showTodayTasks, showTomorrowTasks } from './commands';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { development, production } from './core';
 import { showTrackHabits } from './commands/habits';
+import { welcomeMessage } from './commands/start';
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const ENVIRONMENT = process.env.NODE_ENV || '';
@@ -11,6 +11,8 @@ const ENVIRONMENT = process.env.NODE_ENV || '';
 const bot = new Telegraf(BOT_TOKEN);
 bot.start((ctx) => ctx.reply('Welcome'));
 
+bot.start(welcomeMessage)
+bot.help(howToUseBot)
 bot.command('about', about());
 bot.command('task_today', showTodayTasks)
 bot.command('task_tomorrow', showTomorrowTasks)
